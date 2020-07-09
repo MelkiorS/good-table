@@ -28,8 +28,6 @@ export class TableComponent implements OnInit{
   rowData: Array<TableModel>;
 
   constructor(private dataService: DataService) {
-
-
     this.columnDefs = [
 
       {
@@ -91,7 +89,6 @@ export class TableComponent implements OnInit{
       resizable: true,
     };
     this.pivotRowTotals = 'after';
-
     this.autoGroupColumnDef = {
       headerName: 'Name',
       minWidth: 200,
@@ -147,8 +144,6 @@ export class TableComponent implements OnInit{
         this.lvl1Options = resp.lvl1Options
         this.lvl2Options = resp.lvl2Options
         this.rowData = resp.data
-        this.gridColumnApi
-          .addRowGroupColumns([this.lvl1OptionSelected, this.lvl2OptionSelected]);
       } )
   }
 
@@ -159,15 +154,17 @@ export class TableComponent implements OnInit{
 
   onChangeLvl1(value){
     this.lvl1OptionSelected = value
-    this.lvl2OptionSelected = ''
+    this.lvl2OptionSelected = null
     this.removeGrouping()
     this.fetchNewDate()
+    this.setGrouping()
   }
 
   onChangeLvl2(value){
     this.lvl2OptionSelected = value
     this.removeGrouping()
-    this.fetchNewDate()
+    // this.fetchNewDate()
+    this.setGrouping()
   }
 
   private removeGrouping() {
@@ -175,5 +172,10 @@ export class TableComponent implements OnInit{
       .map(col => col.colId)
       .forEach(col =>
         this.gridColumnApi.removeRowGroupColumn(col))
+  }
+
+  private setGrouping(){
+    this.gridColumnApi
+      .addRowGroupColumns([this.lvl1OptionSelected, this.lvl2OptionSelected])
   }
 }

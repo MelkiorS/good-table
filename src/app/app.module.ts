@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { AgGridModule } from 'ag-grid-angular';
 import {TableComponent} from "./table/table.component";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 
 @NgModule({
   declarations: [
@@ -14,6 +15,8 @@ import {TableComponent} from "./table/table.component";
   imports: [
     BrowserModule,
     AgGridModule.withComponents([]),
+    ReactiveFormsModule,
+    FormsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

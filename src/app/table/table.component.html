@@ -1,13 +1,19 @@
 <div class="options">
   <select (change)="onChangeLvl1($event.target.value)">
     <option *ngFor="let opt of lvl1Options"
-            value="{{opt}}">{{opt}}</option>
+            value="{{opt}}">
+      {{opt}}
+    </option>
   </select>
 
   <select style=" margin-left: 8px;"
-    (change)="onChangeLvl2($event.target.value)">
+          (ngModelChange)="onChangeLvl2($event)"
+          [(ngModel)]="lvl2OptionSelected">
+    <option [ngValue]="null" [disabled]="true" >Select value</option>
     <option *ngFor="let opt of lvl2Options"
-            value="{{opt}}">{{opt}}</option>
+            value="{{opt}}">
+      {{opt}}
+    </option>
   </select>
 </div>
 

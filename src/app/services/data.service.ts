@@ -23,7 +23,7 @@ export class DataService {
   }
 
   fetchData(lvl1: string, lvl2?: string): Observable<ResponseData> {
-    let fakeData = this.createUsers(5).map(u => {
+    let fakeData = this.createUsers(15).map(u => {
       return {
         name: u.name,
         company: u.company,
@@ -50,7 +50,9 @@ export class DataService {
       name: faker.name.findName(),
       email: faker.internet.email(),
       address: faker.address.streetAddress(),
-      company: faker.random.arrayElement(['TestCompany', 'TestCompany2', 'TestCompany3']),
+      company: faker.random.arrayElement(
+        ['TestCompany', 'TestCompany2', 'TestCompany3'
+           ,'TestCompany4','TestCompany5','TestCompany6']),
       color: faker.random.arrayElement(['Red', 'Grin', 'Yellow']),
       country: faker.random.arrayElement(['EN', 'RU', 'HE']),
       lang: faker.random.arrayElement(['english', 'russian', 'hebrew']),
