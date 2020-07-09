@@ -24,7 +24,7 @@ export class DataService {
 
   fetchData(lvl1: string, lvl2?: string): Observable<ResponseData> {
     let fakeData = this.createUsers(15).map(u => {
-      return {
+      return { // fields are optional, get back only  {lvl1, lvl2, revenue, leads}
         name: u.name,
         company: u.company,
         revenue: u.revenue,
