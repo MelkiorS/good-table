@@ -1,1 +1,44 @@
-<p>table works!</p>
+<div class="options">
+  <select (change)="onChangeLvl1($event.target.value)">
+    <option *ngFor="let opt of lvl1Options"
+            value="{{opt}}">{{opt}}</option>
+  </select>
+
+  <select style=" margin-left: 8px;"
+    (change)="onChangeLvl2($event.target.value)">
+    <option *ngFor="let opt of lvl2Options"
+            value="{{opt}}">{{opt}}</option>
+  </select>
+</div>
+
+
+<ag-grid-angular
+  style="width: 700px; height: 400px;"
+  class="ag-theme-alpine"
+  [rowData]="rowData"
+  [columnDefs]="columnDefs"
+  [autoGroupColumnDef]="autoGroupColumnDef"
+  [animateRows]="true"
+  [pivotMode]="true"
+  (gridReady)="onGridReady($event)"
+>
+</ag-grid-angular>
+
+
+<!--<ag-grid-angular
+  #agGrid
+  style="width: 100%; height: 100%;"
+  id="myGrid"
+  class="ag-theme-alpine"
+  [columnDefs]="columnDefs"
+  [defaultColDef]="defaultColDef"
+  [autoGroupColumnDef]="autoGroupColumnDef"
+  [sideBar]="true"
+  [pivotMode]="true"
+  [rowGroupPanelShow]="rowGroupPanelShow"
+  [pivotPanelShow]="pivotPanelShow"
+  [pivotColumnGroupTotals]="pivotColumnGroupTotals"
+  [pivotRowTotals]="pivotRowTotals"
+  [rowData]="rowData"
+  (gridReady)="onGridReady($event)"
+></ag-grid-angular>-->
