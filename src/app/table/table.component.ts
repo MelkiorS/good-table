@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {DataService} from "../services/data.service";
+import {DataService, ResponseData} from "../services/data.service";
 import {TableModel} from "../models/table-model";
 import 'ag-grid-enterprise';
 import 'ag-grid-enterprise/dist/styles/ag-grid.css';
@@ -78,7 +78,13 @@ export class TableComponent implements OnInit{
         field: 'revenue',
         aggFunc: 'sum',
       },
-    ];
+      {
+        headerName: 'rpl',
+        field: 'rpl',
+        valueGetter: this.rplGetter.bind(this),
+        aggFunc:  this.ratioRplFunc.bind(this),
+      },
+    ]
     this.defaultColDef = {
       flex: 1,
       minWidth: 150,
@@ -95,16 +101,61 @@ export class TableComponent implements OnInit{
     }
   }
 
+  private ratioRplFunc(values) {
+    let revenueSum = 0;
+    let leadsSum = 0;
+    values.forEach(function(value) {
+      if (value && value.revenue) {
+        revenueSum += value.revenue;
+      }
+      if (value && value.leads) {
+        leadsSum += value.leads;
+      }
+    });
+    return this.createValueObject(revenueSum, leadsSum);
+
+  }
+
+  private rplGetter(params) {
+    if (!params.node.group) {
+      // no need to handle group levels - calculated in the 'ratioAggFunc'
+      return this.createValueObject(params.data.revenue, params.data.leads);
+    }
+  }
+
+  private createValueObject(revenue, leads) {
+    return {
+      revenue :revenue,
+      leads :leads,
+      toString: function() {
+        return (revenue && leads) ? Math.round(revenue / leads)  : 0;
+      }
+    }
+  }
+
   onGridReady(params) {
     this.gridApi = params.api;
     this.gridColumnApi = params.columnApi;
     this.gridColumnApi.addRowGroupColumn(this.lvl1OptionSelected);
 
-    this.dataService.fetchData(this.lvl1OptionSelected)
-      .subscribe(data => {
-        this.rowData = data;
-      });
+    this.fetchNewDate()
   }
+
+  private fetchNewDate(){
+    this.dataService.fetchData(this.lvl1OptionSelected, this.lvl2OptionSelected)
+      .subscribe(resp => {
+        this.lvl1Options = resp.lvl1Options
+        this.lvl2Options = resp.lvl2Options
+        this.rowData = resp.data
+        this.gridColumnApi
+          .addRowGroupColumns([this.lvl1OptionSelected, this.lvl2OptionSelected]);
+      } )
+  }
+
+  ngOnInit(): void {
+    // setInterval(()=>this.fetchNewDate(), 3000)
+  }
+
 
   onChangeLvl1(value){
     this.lvl1OptionSelected = value
@@ -118,21 +169,6 @@ export class TableComponent implements OnInit{
     this.removeGrouping()
     this.fetchNewDate()
   }
-
-  private fetchNewDate(){
-    this.dataService.fetchData(this.lvl1OptionSelected, this.lvl2OptionSelected)
-      .subscribe(data => {
-        this.rowData = data
-        this.gridColumnApi
-          .addRowGroupColumns([this.lvl1OptionSelected, this.lvl2OptionSelected]);
-      } )
-  }
-
-  ngOnInit(): void {
-    this.lvl1Options = ['company', 'color']
-    this.lvl2Options = ['lang', 'country']
-  }
-
 
   private removeGrouping() {
     this.gridColumnApi.getRowGroupColumns()
